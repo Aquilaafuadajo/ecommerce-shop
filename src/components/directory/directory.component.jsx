@@ -42,7 +42,7 @@ class Directory extends React.Component {
         }
       ]
       
-     }
+      }
   }
   render() { 
     return ( 
@@ -53,9 +53,9 @@ class Directory extends React.Component {
           ))
         }
       </div>
-     );
+      );
   }
 }
- 
+
 export default Directory;
 
