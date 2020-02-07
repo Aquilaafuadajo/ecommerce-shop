@@ -22,13 +22,12 @@ export const createUserProfileDocument = async(userAuth, additionalData ) => {
   console.log(snapShot)
 
   if(!snapShot.exists) {
-    // const {displayName, email} = userAuth;
-    const {email} = userAuth;
+    const {email, displayName} = userAuth;
     const createdAt = new Date()
 
     try {
       await userRef.set({
-        // displayName,
+        displayName,
         email,
         createdAt,
         ...additionalData
@@ -38,6 +37,36 @@ export const createUserProfileDocument = async(userAuth, additionalData ) => {
     }
   }
   return userRef;
+}
+
+export const addCollectionAndDocuments = async (collectionKey, objectsToAdd) => {
+  const collectionRef = firestore.collection(collectionKey);
+  
+  const batch = firestore.batch();
+  objectsToAdd.forEach(obj => {
+    const newDocRef = collectionRef.doc()
+    batch.set(newDocRef, obj);
+  })
+
+  return await batch.commit();
+}
+
+export const convertCollectionsSnapshotToMap = (collections) => {
+  const transformedCollection = collections.docs.map(doc => {
+    const {title, items} = doc.data();
+
+    return {
+      routeName: encodeURI(title.toLowerCase()),
+      id: doc.id,
+      title,
+      items
+    }
+  })
+  console.log(transformedCollection)
+  return transformedCollection.reduce((accumulator, collection) => {
+    accumulator[collection.title.toLowerCase()] = collection;
+    return accumulator;
+  }, {}); //this code here is to convert the transformedCollection array into an object as it is in our shop-data
 }
 
 firebase.initializeApp(config);

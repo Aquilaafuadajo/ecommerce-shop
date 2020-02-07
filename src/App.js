@@ -12,28 +12,28 @@ import HomePage from './pages/homepage/homepage.component';
 import CheckoutPage from './pages/checkout/checkout.component';
 
 import {auth, createUserProfileDocument} from './firebase/firebase.utils';
+
 import {setCurrentUser} from './redux/user/user.action';
-import {selectCurrentUser} from './redux/user/user.selectors'
+import {selectCurrentUser} from './redux/user/user.selectors';
+
 
 class App extends React.Component {
   unsuscribeFromAuth = null;
   
   componentDidMount(){
     const {setCurrentUser} = this.props;
-
     this.unsuscribeFromAuth = auth.onAuthStateChanged(async userAuth => {
       console.log(userAuth)
       if(userAuth) {
         const userRef = await createUserProfileDocument(userAuth);
         
-        userRef.onSnapshot(snapShot => {
+        userRef.onSnapshot( snapShot => {
           setCurrentUser({
               id: snapShot.id,
               ...snapShot.data()
             })
           })
         }
-
         setCurrentUser(userAuth)
       });
     }
