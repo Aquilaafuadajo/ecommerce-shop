@@ -56,7 +56,7 @@ export const convertCollectionsSnapshotToMap = (collections) => {
     const {title, items} = doc.data();
 
     return {
-      routeName: encodeURI(title.toLowerCase()),
+      routeName: encodeURI(title.toLowerCase()), 
       id: doc.id,
       title,
       items
@@ -69,14 +69,23 @@ export const convertCollectionsSnapshotToMap = (collections) => {
   }, {}); //this code here is to convert the transformedCollection array into an object as it is in our shop-data
 }
 
+export const getCurrentUser = () => {
+  return new Promise((resolve, reject) => {
+    const unsubscribe = auth.onAuthStateChanged(userAuth => {
+      unsubscribe();
+      resolve(userAuth);
+    }, reject)
+  })
+}
+
 firebase.initializeApp(config);
 
 export const auth = firebase.auth();
 export const firestore = firebase.firestore();
 
-const provider = new firebase.auth.GoogleAuthProvider()
-provider.setCustomParameters({params: 'select_account'});
+export const googleProvider = new firebase.auth.GoogleAuthProvider()
+googleProvider.setCustomParameters({params: 'select_account'});
 
-export const signInWithGoogle = () => auth.signInWithPopup(provider);
+export const signInWithGoogle = () => auth.signInWithPopup(googleProvider);
 
 export default firebase;
