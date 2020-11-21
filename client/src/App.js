@@ -13,12 +13,14 @@ import CheckoutPage from './pages/checkout/checkout.component';
 
 import {selectCurrentUser} from './redux/user/user.selectors';
 import {checkUserSession} from './redux/user/user.action';
+import {fetchCollectionStart} from './redux/shop/shop.actions'
 
 
-const App = ({ checkUserSession, currentUser }) => {
+const App = ({ checkUserSession, currentUser, fetchCollectionStart }) => {
   useEffect(() => {
     checkUserSession()
-  }, [checkUserSession])
+    fetchCollectionStart()
+  }, [checkUserSession, fetchCollectionStart])
 
   return(
     <div>
@@ -38,7 +40,8 @@ const mapStateToProps = createStructuredSelector({
 });
 
 const mapDispatchToProps = dispatch => ({
-  checkUserSession: () => dispatch(checkUserSession())
+  checkUserSession: () => dispatch(checkUserSession()),
+  fetchCollectionStart: () => dispatch(fetchCollectionStart())
 });
 
 export default connect(
